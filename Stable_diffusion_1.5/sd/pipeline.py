@@ -31,9 +31,9 @@ def generate(
             raise ValueError("Strength must be in the range (0, 1]")
         
         if idle_device:
-            to_idle: lambda x: x.to(idle_device)
+            to_idle = lambda x: x.to(idle_device)
         else:
-            to_idle: lambda x: x
+            to_idle = lambda x: x
         
         generator = torch.Generator(device=device)
         if seed is None:
@@ -133,6 +133,10 @@ def generate(
 
         decoder = models["decoder"]
         decoder.to(device)
+
+        images = decoder(latents)
+        to_idle(decoder)
+
 
         images = rescale(images,(-1,1),(0,255),clamp=True)
 
